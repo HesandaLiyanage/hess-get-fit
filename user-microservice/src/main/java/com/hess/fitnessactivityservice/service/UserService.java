@@ -40,6 +40,23 @@ public class UserService {
         userResponse.setUpdatedAt(savedUser.getUpdatedAt());
         userResponse.setCreatedAt(savedUser.getCreatedAt());
 
-        return UserResponse;
+        return userResponse;
+    }
+
+    public UserResponse getUserProfile(String userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new RuntimeException("User not found for this id :: "+userId));
+
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(user.getId());
+        userResponse.setEmail(user.getEmail());
+        userResponse.setPassword(user.getPassword());
+        userResponse.setFirstname(user.getFirstname());
+        userResponse.setLastname(user.getLastname());
+        userResponse.setUpdatedAt(user.getUpdatedAt());
+        userResponse.setCreatedAt(user.getCreatedAt());
+
+        return userResponse;
+
     }
 }

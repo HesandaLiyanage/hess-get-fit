@@ -1,14 +1,14 @@
-package com.hess.fitnessuserservice;
+package com.hess.fitnessactivityservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FitnessFitApplication {
+public class ActivityServiceApplication {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(FitnessFitApplication.class, args);
+        SpringApplication.run(ActivityServiceApplication.class, args);
     }
 
 }
