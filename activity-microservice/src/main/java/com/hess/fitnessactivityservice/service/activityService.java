@@ -6,8 +6,9 @@ import com.hess.fitnessactivityservice.model.Activity;
 import com.hess.fitnessactivityservice.repository.ActivityRepository;
 import org.springframework.stereotype.Service;
 
-@Service
+import java.util.List;
 
+@Service
 public class activityService {
 
     private final ActivityRepository activityRepository;
@@ -41,8 +42,13 @@ public class activityService {
         response.setType(activity.getType());
         response.setStartTime(activity.getStartTime());
         response.setAdditionalInfo(activity.getAdditionalInfo());
+        response.setCreatedAt(activity.getCreatedAt());
+        response.setUpdatedAt(activity.getUpdatedAt());
         return response;
     }
 
-
+    public List<ActivityResponse> getUserActivities(String userId) {
+        List<Activity> activites = activityRepository.findByUserId(userId);
+        return activites.stream().map(this::mapToResponse).toList();
+    }
 }

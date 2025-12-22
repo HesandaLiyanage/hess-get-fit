@@ -1,6 +1,7 @@
 package com.hess.fitnessactivityservice.model;
 
 import com.hess.fitnessactivityservice.model.ActivityType.ActivityType;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -18,6 +20,7 @@ import java.util.Map;
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Activity {
     @Id
     private String id;
