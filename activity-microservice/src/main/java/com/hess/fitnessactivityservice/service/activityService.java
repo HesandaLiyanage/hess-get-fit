@@ -7,6 +7,7 @@ import com.hess.fitnessactivityservice.repository.ActivityRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class activityService {
@@ -48,7 +49,14 @@ public class activityService {
     }
 
     public List<ActivityResponse> getUserActivities(String userId) {
-        List<Activity> activites = activityRepository.findByUserId(userId);
-        return activites.stream().map(this::mapToResponse).toList();
+        List<Activity> activities = activityRepository.findByUserId(userId);
+        return activities.stream().map(this::mapToResponse).toList();
+    }
+
+    public ActivityResponse getActivity(String activityId) {
+        Optional<Activity> gotActivity = activityRepository.findById(activityId);
+        return gotActivity.map(this::mapToResponse).orElseThrow(
+                () -> new RuntimeException("Activity not found for this id :: "+activityId)
+        );
     }
 }
