@@ -1,8 +1,8 @@
-package com.hess.fitnessuserservice.controller;
+package com.hess.fitnessactivityservice.controller;
 
-import com.hess.fitnessuserservice.dto.RegisterRequest;
-import com.hess.fitnessuserservice.dto.UserResponse;
-import com.hess.fitnessuserservice.service.UserService;
+import com.hess.fitnessactivityservice.dto.RegisterRequest;
+import com.hess.fitnessactivityservice.dto.UserResponse;
+import com.hess.fitnessactivityservice.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

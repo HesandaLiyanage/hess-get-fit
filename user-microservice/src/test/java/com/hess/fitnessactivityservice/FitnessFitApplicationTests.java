@@ -1,4 +1,4 @@
-package com.hess.fitnessuserservice;
+package com.hess.fitnessactivityservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

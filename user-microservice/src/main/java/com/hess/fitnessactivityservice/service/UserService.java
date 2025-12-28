@@ -1,12 +1,11 @@
-package com.hess.fitnessuserservice.service;
+package com.hess.fitnessactivityservice.service;
 
 
-import com.hess.fitnessuserservice.dto.RegisterRequest;
-import com.hess.fitnessuserservice.dto.UserResponse;
-import com.hess.fitnessuserservice.model.User;
-import com.hess.fitnessuserservice.repository.UserRepository;
+import com.hess.fitnessactivityservice.dto.RegisterRequest;
+import com.hess.fitnessactivityservice.dto.UserResponse;
+import com.hess.fitnessactivityservice.model.User;
+import com.hess.fitnessactivityservice.repository.UserRepository;
 import jakarta.validation.Valid;
-import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service

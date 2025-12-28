@@ -1,11 +1,9 @@
-package com.hess.fitnessuserservice.dto;
+package com.hess.fitnessactivityservice.dto;
 
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.jspecify.annotations.Nullable;
 
 @Data
 public class RegisterRequest {

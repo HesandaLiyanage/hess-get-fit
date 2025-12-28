@@ -1,4 +1,4 @@
-package com.hess.fitnessuserservice.model;
+package com.hess.fitnessactivityservice.model;
 
 
 import jakarta.persistence.*;

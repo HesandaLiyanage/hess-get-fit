@@ -1,12 +1,6 @@
-package com.hess.fitnessuserservice.dto;
+package com.hess.fitnessactivityservice.dto;
 
-import com.hess.fitnessuserservice.model.UserRole;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 @Data
