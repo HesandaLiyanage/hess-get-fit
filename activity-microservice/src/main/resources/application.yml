@@ -6,4 +6,10 @@ spring:
     database: fitness_activitydb
 
 server:
-  port: 8081
+  port: 8080
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
