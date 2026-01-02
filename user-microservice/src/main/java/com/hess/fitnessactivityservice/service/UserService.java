@@ -8,6 +8,8 @@ import com.hess.fitnessactivityservice.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -57,5 +59,13 @@ public class UserService {
 
         return userResponse;
 
+    }
+
+    public Boolean existByUserId(String userId) {
+        return userRepository.existsById(userId);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }
