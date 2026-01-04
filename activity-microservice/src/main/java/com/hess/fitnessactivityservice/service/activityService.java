@@ -13,12 +13,18 @@ import java.util.Optional;
 public class activityService {
 
     private final ActivityRepository activityRepository;
+    private final userValidationService userValidationService;
 
-    public activityService(ActivityRepository activityRepository){
+    public activityService(ActivityRepository activityRepository , userValidationService userVavlidationService){
+
         this.activityRepository = activityRepository;
+        this.userValidationService = userVavlidationService;
     }
 
     public ActivityResponse trackActivity(ActivityRequest request) {
+        boolean isValidUser = userValidationService.validateUser(request.getUserId());
+        if(!isValidUser)
+            throw new RuntimeException("User not found for this id :: "+request.getUserId());
         Activity activity = Activity.builder()
                 .userId(request.getUserId())
                 .calories(request.getCalories())
