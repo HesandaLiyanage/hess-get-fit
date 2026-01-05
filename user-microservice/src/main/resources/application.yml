@@ -1,6 +1,6 @@
 spring:
   application:
-    name: user-microservice
+    name: USER-SERVICE
   datasource:
     url: jdbc:postgresql://localhost:5432/fitness_userdb
     username: postgres
