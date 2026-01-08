@@ -5,6 +5,8 @@ import com.hess.fitnessactivityservice.dto.ActivityResponse;
 import com.hess.fitnessactivityservice.service.activityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -19,18 +21,18 @@ public class ActivityController {
     }
 
     @PostMapping()
-    public ResponseEntity<ActivityResponse> trackActivity(@RequestBody ActivityRequest request) {
-        return ResponseEntity.ok(activityService.trackActivity(request));
+    public Mono<ResponseEntity<ActivityResponse>> trackActivity(@RequestBody ActivityRequest request) {
+        return activityService.trackActivity(request).map(ResponseEntity::ok);
     }
 
     @GetMapping()
-    public ResponseEntity<List<ActivityResponse>> getUserActivities(@RequestHeader("X-User-ID") String userId ) {
-        return ResponseEntity.ok(activityService.getUserActivities(userId));
+    public Flux<ActivityResponse> getUserActivities(@RequestHeader("X-User-ID") String userId ) {
+        return activityService.getUserActivities(userId);
     }
 
     @GetMapping("/{activityId}")
-    public ResponseEntity<ActivityResponse> getActivity(@PathVariable String activityId) {
-        return ResponseEntity.ok(activityService.getActivity(activityId));
+    public Mono<ResponseEntity<ActivityResponse>> getActivity(@PathVariable String activityId) {
+        return activityService.getActivity(activityId).map(ResponseEntity::ok);
     }
 
 }

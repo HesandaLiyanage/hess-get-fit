@@ -5,7 +5,10 @@ import com.hess.fitnessactivityservice.dto.ActivityResponse;
 import com.hess.fitnessactivityservice.model.Activity;
 import com.hess.fitnessactivityservice.repository.ActivityRepository;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
+import java.lang.management.MonitorInfo;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,23 +24,25 @@ public class activityService {
         this.userValidationService = userVavlidationService;
     }
 
-    public ActivityResponse trackActivity(ActivityRequest request) {
-        boolean isValidUser = userValidationService.validateUser(request.getUserId());
-        if(!isValidUser)
-            throw new RuntimeException("User not found for this id :: "+request.getUserId());
-        Activity activity = Activity.builder()
-                .userId(request.getUserId())
-                .calories(request.getCalories())
-                .duration(request.getDuration())
-                .type(request.getType())
-                .startTime(request.getStartTime())
-                .additionalInfo(request.getAdditionalInfo())
-                .build();
+    public Mono<ActivityResponse> trackActivity(ActivityRequest request) {
+        return userValidationService.validateUser(request.getUserId())
+                .flatMap(isValid -> {
+                    if (!isValid) {
+                        return Mono.error(new RuntimeException("User not found"));
+                    }
 
-        Activity savedActivity = activityRepository.save(activity);
+                    Activity activity = Activity.builder()
+                            .userId(request.getUserId())
+                            .calories(request.getCalories())
+                            .duration(request.getDuration())
+                            .type(request.getType())
+                            .startTime(request.getStartTime())
+                            .additionalInfo(request.getAdditionalInfo())
+                            .build();
 
-        return mapToResponse(savedActivity);
-
+                    return activityRepository.save(activity);  // Returns Mono<Activity>
+                })
+                .map(this::mapToResponse);
     }
 
     private ActivityResponse mapToResponse(Activity activity){
@@ -54,15 +59,11 @@ public class activityService {
         return response;
     }
 
-    public List<ActivityResponse> getUserActivities(String userId) {
-        List<Activity> activities = activityRepository.findByUserId(userId);
-        return activities.stream().map(this::mapToResponse).toList();
+    public Flux<ActivityResponse> getUserActivities(String userId) {
+        return activityRepository.findByUserId(userId).map(this::mapToResponse);
     }
 
-    public ActivityResponse getActivity(String activityId) {
-        Optional<Activity> gotActivity = activityRepository.findById(activityId);
-        return gotActivity.map(this::mapToResponse).orElseThrow(
-                () -> new RuntimeException("Activity not found for this id :: "+activityId)
-        );
+    public Mono<ActivityResponse> getActivity(String activityId) {
+        return activityRepository.findById(activityId).map(this::mapToResponse).switchIfEmpty(Mono.error(new RuntimeException("Activity not found: " + activityId)));
     }
 }
