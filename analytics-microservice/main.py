@@ -1,40 +1,71 @@
-from fastapi import FastAPI
-import py_eureka_client.eureka_client as eureka_client
-from api.config import settings
-from api.events.routing import router as event_router
+from fastapi import FastAPI, HTTPException, Query
+from api.models import UserSummaryResponse, PeriodStatsResponse, StreakResponse, Period
+from api.services.analytics_service import AnalyticsService
 
-app = FastAPI()
-app.include_router(event_router, prefix="/api/analytics")
-
+app = FastAPI(title="Analytics Service")
+analytics_service = AnalyticsService()
 
 
-@app.get("/")
-async def root():
-    return {"message": "Analytics Service"}
+# ============================================
+# ENDPOINT 1: User Summary
+# ============================================
+@app.get("/analytics/users/{user_id}/summary", response_model=UserSummaryResponse)
+async def get_user_summary(user_id: str):
+    """
+    Get all-time summary statistics for a user.
 
-@app.get("/testservice")
-async def health():
-    return {"status": "UP"}
-
-
-
-
-@app.on_event("startup")
-async def startup_event():
-    await eureka_client.init_async(
-        eureka_server=settings.eureka_server,
-        app_name=settings.app_name,
-        instance_port=settings.app_port,
-        instance_host=settings.instance_host,
-        health_check_url="/health",
-        status_page_url="/health"
-    )
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    await eureka_client.stop_async()
+    Returns:
+    - Total activities, duration, calories
+    - Average duration and calories per activity
+    - Favorite activity type
+    - First and last activity dates
+    """
+    try:
+        return await analytics_service.get_user_summary(user_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=settings.app_port)
+# ============================================
+# ENDPOINT 2: Period Stats (Daily/Weekly)
+# ============================================
+@app.get("/analytics/users/{user_id}/stats", response_model=PeriodStatsResponse)
+async def get_period_stats(
+        user_id: str,
+        period: Period = Query(Period.WEEKLY, description="Period: 'daily' or 'weekly'")
+):
+    """
+    Get statistics for a specific period.
+
+    - daily: Today's stats only
+    - weekly: Last 7 days stats
+
+    Returns:
+    - Total activities, duration, calories for the period
+    - Average per day
+    - Number of active days
+    """
+    try:
+        return await analytics_service.get_period_stats(user_id, period.value)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============================================
+# ENDPOINT 3: Streaks
+# ============================================
+@app.get("/analytics/users/{user_id}/streaks", response_model=StreakResponse)
+async def get_user_streaks(user_id: str):
+    """
+    Get workout streak and consistency statistics.
+
+    Returns:
+    - Current streak (consecutive days up to today/yesterday)
+    - Longest streak ever
+    - Active days this week (Mon-today)
+    - Active days this month (1st-today)
+    """
+    try:
+        return await analytics_service.get_user_streaks(user_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
