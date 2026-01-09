@@ -1,16 +1,23 @@
 from fastapi import FastAPI
 import py_eureka_client.eureka_client as eureka_client
-from app.config import settings
+from api.config import settings
+from api.events.routing import router as event_router
 
 app = FastAPI()
+app.include_router(event_router, prefix="/api/analytics")
+
+
 
 @app.get("/")
 async def root():
     return {"message": "Analytics Service"}
 
-@app.get("/health")
+@app.get("/testservice")
 async def health():
     return {"status": "UP"}
+
+
+
 
 @app.on_event("startup")
 async def startup_event():
